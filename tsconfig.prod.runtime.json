@@ -1,0 +1,6 @@
+{
+	"compilerOptions": {
+		"paths": { "@/*": ["*"] },
+		"baseUrl": "dist/src"
+	}
+}

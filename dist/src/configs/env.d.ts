@@ -1,0 +1,15 @@
+import pino from 'pino';
+export declare const isLogEnv: boolean;
+export declare const envLogger: pino.Logger;
+export declare const ENV_LOGGER: string;
+export declare const ENV: string;
+export declare const SERVICE_NAME: string;
+export declare const SHUTDOWN_TIMEOUT: string;
+export declare const SERVER_PORT: string;
+export declare const LOG_ENABLE: string;
+export declare const LOG_LEVEL: string;
+export declare const NOTIFICATIONS_DB_USER: string;
+export declare const NOTIFICATIONS_DB_HOST: string;
+export declare const NOTIFICATIONS_DB_DATABASE: string;
+export declare const NOTIFICATIONS_DB_PORT: string;
+export declare const EM_MYSQL_PASSWORD: string;

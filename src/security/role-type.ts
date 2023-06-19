@@ -1,0 +1,11 @@
+'use strict';
+
+export enum RoleType {
+    ADMIN = 'ROLE_ADMIN',
+    INSURER = 'ROLE_INSURER',
+    FIELD_OFFICER = 'ROLE_FIELD_OFFICER',
+    DEALER = 'ROLE_DEALER',
+    AGENT = 'ROLE_AGENT',
+    USER = 'ROLE_USER',
+    ANONYMOUS = 'ROLE_ANONYMOUS',
+}

@@ -1,0 +1,41 @@
+image: public.ecr.aws/e9c2r6t3/node-aws-dind:latest
+
+services:
+  - docker:dind
+
+cache:
+  key: ${CI_PROJECT_NAME}
+  paths:
+    - ./api/.npm/
+    - ./api/node_modules/
+
+stages:
+  - deploy
+
+before_script:
+  - cd ./api
+  - export VERSION=$(node -p "require('./package').version")
+  - rm .npmrc
+  - |
+    {
+      echo '@${CI_PROJECT_ROOT_NAMESPACE}:registry=${CI_SERVER_PROTOCOL}://${CI_SERVER_HOST}/api/v4/projects/${PACKAGE_REGISTRY_PROJECT_ID}/packages/npm/'
+      echo '//${CI_SERVER_HOST}/api/v4/packages/npm/:_authToken=${CI_JOB_TOKEN}'
+      echo '//${CI_SERVER_HOST}/api/v4/projects/${PACKAGE_REGISTRY_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}'
+
+    } >> .npmrc
+
+deploy_prod:
+  stage: deploy
+  rules:
+    - if: '$CI_COMMIT_REF_NAME== "master" && $CI_MERGE_REQUEST_ID == null'
+  script:
+    - $(aws ecr get-login --no-include-email --region us-east-2)
+    - npm ci --cache .npm --prefer-offline
+    - npm run build
+    - |
+      {
+        token="${CI_JOB_TOKEN}"
+        echo $token > /tmp/npmrc_token
+      }
+    - DOCKER_BUILDKIT=1 docker build --secret id=npmrc,src=/tmp/npmrc_token -t $API_REPOSITORY_URL_PROD:$VERSION .
+    - docker push $API_REPOSITORY_URL_PROD:$VERSION
